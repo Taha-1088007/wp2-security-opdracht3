@@ -5,7 +5,7 @@ import io
 import smtplib
 from email.message import EmailMessage
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session, g, Response
+from flask import Flask, render_template, request, redirect, url_for, flash, session, g, Response, abort
 from data.database import Database
 from models.user import User
 from models.organization import Organization
@@ -1130,7 +1130,14 @@ def expert_studies():
 @app.route("/expert/profile/<int:user_id>")
 def expert_profile(user_id):
     """Show profile of user"""
+    # logged in, but if this is not your profile than access denied
+    if g.current_user["id"] != user_id:
+        abort(403) #Forbidden
+
     profile = users.get_profile(user_id)
+    if not profile:
+        abort(404) #Not found
+
     profile_id = profile["id"]
     all_disabilities = users.get_all_disabilities()
     profile_disability = users.get_profile_disability(get_profile_id())
