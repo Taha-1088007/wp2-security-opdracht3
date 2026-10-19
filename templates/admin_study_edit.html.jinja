@@ -1,0 +1,145 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Onderzoek Bewerken{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_form.css') }}">
+{% endblock %}
+
+{% block content %}
+<nav aria-label="Breadcrumb navigatie" class="breadcrumb">
+    <ol>
+        <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('admin_studies') }}">Onderzoeken</a></li>
+        <li aria-current="page">{{ study[2] }} Bewerken</li>
+    </ol>
+</nav>
+
+<div class="form-header">
+    <h1>Onderzoek Bewerken: {{ study[2] }}</h1>
+    <p class="form-description">Wijzig de gegevens van het onderzoek. Let op: wijzigingen worden direct
+        opgeslagen.</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form method="post" action="{{ url_for('admin_study_edit', study_id=study[0]) }}" class="detail-form">
+    <section class="form-section" aria-labelledby="basis-gegevens">
+        <h2 id="basis-gegevens">Basis Gegevens</h2>
+
+        <div class="form-group">
+            <label for="titel">
+                Titel <span class="required">*</span>
+            </label>
+            <input type="text" id="titel" name="title" value="{{ form_data.title if form_data else study[2] }}" required
+                maxlength="200">
+            {% if errors and errors.title %}
+            <span class="error-message">{{ errors.title }}</span>
+            {% endif %}
+            <span class="help-text">Duidelijke en beknopte titel van het onderzoek</span>
+        </div>
+
+        <div class="form-group">
+            <label for="beschrijving">
+                Beschrijving <span class="required">*</span>
+            </label>
+            <textarea id="beschrijving" name="description" rows="6" required
+                maxlength="2000">{{ form_data.description if form_data else (study[5] or '') }}</textarea>
+            {% if errors and errors.description %}
+            <span class="error-message">{{ errors.description }}</span>
+            {% endif %}
+            <span class="help-text">Uitgebreide beschrijving van het onderzoek (max 2000 tekens)</span>
+        </div>
+
+        <div class="form-group">
+            <label for="status">
+                Status <span class="required">*</span>
+            </label>
+            <select id="status" name="status" required>
+                <option value="nieuw" {% if (form_data and form_data.status=='nieuw' ) or (not form_data and
+                    study[3]=='nieuw' ) %}selected{% endif %}>Nieuw</option>
+                <option value="goedgekeurd" {% if (form_data and form_data.status=='goedgekeurd' ) or (not form_data and
+                    study[3]=='goedgekeurd' ) %}selected{% endif %}>Goedgekeurd</option>
+                <option value="afgekeurd" {% if (form_data and form_data.status=='afgekeurd' ) or (not form_data and
+                    study[3]=='afgekeurd' ) %}selected{% endif %}>Afgekeurd</option>
+                <option value="gesloten" {% if (form_data and form_data.status=='gesloten' ) or (not form_data and
+                    study[3]=='gesloten' ) %}selected{% endif %}>Gesloten</option>
+            </select>
+            <span class="help-text">Huidige status van het onderzoek</span>
+        </div>
+
+        <div class="form-group">
+            <label for="organization_id">
+                Organisatie <span class="required">*</span>
+            </label>
+            <select id="organization_id" name="organization_id" required>
+                <option value="">-- Selecteer organisatie --</option>
+                {% for org in organizations %}
+                <option value="{{ org[0] }}" {% if (form_data and form_data.organization_id|int==org[0]) or (not
+                    form_data and study[1]==org[0]) %}selected{% endif %}>{{ org[1] }}</option>
+                {% endfor %}
+            </select>
+            <span class="help-text">Organisatie die het onderzoek uitvoert</span>
+        </div>
+
+        <div class="form-group">
+            <label for="start_date">
+                Startdatum <span class="required">*</span>
+            </label>
+            <input type="date" id="start_date" name="start_date"
+                value="{{ form_data.start_date if form_data else study[6] }}" required>
+            {% if errors and errors.start_date %}
+            <span class="error-message">{{ errors.start_date }}</span>
+            {% endif %}
+            <span class="help-text">Datum waarop het onderzoek start</span>
+        </div>
+
+        <div class="form-group">
+            <label for="end_date">
+                Einddatum <span class="required">*</span>
+            </label>
+            <input type="date" id="end_date" name="end_date" value="{{ form_data.end_date if form_data else study[7] }}"
+                required>
+            {% if errors and errors.end_date %}
+            <span class="error-message">{{ errors.end_date }}</span>
+            {% endif %}
+            <span class="help-text">Datum waarop het onderzoek afloopt</span>
+        </div>
+
+        <div class="form-group">
+            <label for="study_type">
+                Type <span class="required">*</span>
+            </label>
+            <select id="study_type" name="study_type" required>
+                <option value="">-- Selecteer type --</option>
+                <option value="online" {% if (form_data and form_data.study_type=='online' ) or (not form_data and
+                    study[8]=='online' ) %}selected{% endif %}>Online</option>
+                <option value="telefonisch" {% if (form_data and form_data.study_type=='telefonisch' ) or (not form_data
+                    and study[8]=='telefonisch' ) %}selected{% endif %}>Telefonisch</option>
+                <option value="op locatie" {% if (form_data and form_data.study_type=='op locatie' ) or (not form_data
+                    and study[8]=='op locatie' ) %}selected{% endif %}>Op Locatie</option>
+            </select>
+            <span class="help-text">Type onderzoek (online, telefonisch of op locatie)</span>
+        </div>
+
+        <div class="form-group">
+            <label for="reward">
+                Beloning
+            </label>
+            <input type="text" id="reward" name="reward" value="{{ study[11] or '' }}" maxlength="200">
+            <span class="help-text">Vergoeding of beloning voor deelname (optioneel)</span>
+        </div>
+    </section>
+
+    <div class="form-actions">
+        <a href="{{ url_for('admin_studies') }}" class="btn btn-secondary">Annuleren</a>
+        <button type="submit" class="btn btn-success">Opslaan</button>
+    </div>
+</form>
+{% endblock %}

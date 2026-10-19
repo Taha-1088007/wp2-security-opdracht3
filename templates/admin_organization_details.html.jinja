@@ -1,0 +1,44 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Organisatie Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_detail.css') }}">
+{% endblock %}
+
+{% block content %}
+<nav aria-label="Breadcrumb navigatie" class="breadcrumb">
+    <ol>
+        <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('admin_organizations') }}">Organisaties</a></li>
+        <li aria-current="page">{{ organization.name }}</li>
+    </ol>
+</nav>
+
+<section aria-labelledby="onderzoek-titel">
+    <h2 id="onderzoek-titel">Organisatie Details</h2>
+
+    <dl>
+        <dt><strong>Organisatie ID</strong></dt>
+        <dd>{{ organization.id}}</dd>
+        <dt><strong>Status</strong></dt>
+        <dd>{{ user_list.status or 'nieuw'}}</dd>
+        <dt><strong>Gekoppelde email</strong></dt>
+        <dd>{{ user_list.email or '-' }}</dd>
+        <dt><strong>Organisatie</strong></dt>
+        <dd>{{ organization.name}}</dd>
+        <dt><strong>Type</strong></dt>
+        <dd>{{ organization.website}}</dd>
+        <dt><strong>Beschrijving</strong></dt>
+        <dd>{{ organization.description}}</dd>
+        <dt><strong>Contact persoon</strong></dt>
+        <dd>{{ organization.contact_person}}</dd>
+        <dt><strong>Email</strong></dt>
+        <dd>{{ organization.email}}</dd>
+        <dt><strong>Telefoon</strong></dt>
+        <dd>{{ organization.phone}}</dd>
+        <dt><strong>Details</strong></dt>
+        <dd>{{ organization.details}}</dd>
+    </dl>
+</section>
+{% endblock %}

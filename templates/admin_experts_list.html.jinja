@@ -1,0 +1,112 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Ervaringsdeskundigen{% endblock %}
+
+{% block content %}
+<h2>Ervaringsdeskundigen</h2>
+
+<section aria-labelledby="experts-heading">
+    <div class="section-header">
+        <h3 id="experts-heading">Alle Ervaringsdeskundigen</h3>
+    </div>
+
+    <form method="GET" action="{{ url_for('admin_experts') }}" class="filters">
+        <label for="filter-status-experts">Filter op status:</label>
+        <select id="filter-status-experts" name="status">
+            <option value="" {% if not status %}selected{% endif %}>Alle</option>
+            <option value="nieuw" {% if status=='nieuw' %}selected{% endif %}>Nieuw</option>
+            <option value="goedgekeurd" {% if status=='goedgekeurd' %}selected{% endif %}>Goedgekeurd</option>
+            <option value="afgekeurd" {% if status=='afgekeurd' %}selected{% endif %}>Afgekeurd</option>
+        </select>
+
+        <label for="search-experts">Zoeken:</label>
+        <input type="search" id="search-experts" name="search" value="{{ search }}"
+            placeholder="Zoek op naam of email...">
+
+        <button type="submit" class="btn btn-primary">Zoeken</button>
+    </form>
+
+    <div class="table-wrapper">
+        <table>
+            <caption class="visually-hidden">Lijst van alle ervaringsdeskundigen</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Naam</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Geboortedatum</th>
+                    <th scope="col">Beperkingen</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if experts %}
+                {% for expert in experts %}
+                <tr>
+                    <td>{{ expert[3] }} {{ expert[4] }}</td>
+                    <td>{{ expert[1] }}</td>
+                    <td>{{ expert[5] if expert[5] else '-' }}</td>
+                    <td>{{ expert[6] if expert[6] else 'Geen' }}</td>
+                    <td>
+                        {% if expert[2] == 'nieuw' %}
+                        <span class="status-badge status-nieuw">Nieuw</span>
+                        {% elif expert[2] == 'goedgekeurd' %}
+                        <span class="status-badge status-goedgekeurd">Goedgekeurd</span>
+                        {% elif expert[2] == 'afgekeurd' %}
+                        <span class="status-badge status-afgekeurd">Afgekeurd</span>
+                        {% else %}
+                        <span class="status-badge">{{ expert[2] }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ url_for('admin_expert_detail', id=expert[0]) }}"
+                                class="btn btn-secondary">Bekijken</a>
+                            <a href="{{ url_for('admin_expert_edit', expert_id=expert[0]) }}"
+                                class="btn btn-primary">Bewerken</a>
+                            {% if expert[2] == 'nieuw' %}
+                            <form method="post" action="{{ url_for('approve_expert', expert_id=expert[0]) }}"
+                                style="display: inline;">
+                                <button type="submit" class="btn btn-success">Goedkeuren</button>
+                            </form>
+                            <form method="post" action="{{ url_for('reject_expert', expert_id=expert[0]) }}"
+                                style="display: inline;">
+                                <button type="submit" class="btn btn-danger">Afkeuren</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center;">Geen experts gevonden</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination" role="navigation" aria-label="Pagina navigatie">
+        {% if page > 1 %}
+        <a href="{{ url_for('admin_experts', page=page-1, search=search, status=status) }}" aria-label="Vorige pagina">‹
+            Vorige</a>
+        {% endif %}
+
+        {% for p in range(1, total_pages + 1) %}
+        {% if p == page %}
+        <span aria-current="page" class="current">{{ p }}</span>
+        {% elif p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %} <a
+            href="{{ url_for('admin_experts', page=p, search=search, status=status) }}">{{ p }}</a>
+            {% elif p == page - 3 or p == page + 3 %}
+            <span>...</span>
+            {% endif %}
+            {% endfor %}
+
+            {% if page < total_pages %} <a
+                href="{{ url_for('admin_experts', page=page + 1, search=search, status=status) }}"
+                aria-label="Volgende pagina">Volgende ›</a>
+                {% endif %}
+    </div>
+</section>
+{% endblock %}

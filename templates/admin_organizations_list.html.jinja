@@ -1,0 +1,109 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Organisaties{% endblock %}
+
+{% block content %}
+<h2>Organisaties</h2>
+
+<section aria-labelledby="organizations-heading">
+    <div class="section-header">
+        <h3 id="organizations-heading">Alle Organisaties</h3>
+        <a href="{{ url_for('admin_organization_new') }}" class="btn btn-primary">+ Nieuwe Organisatie
+            Toevoegen</a>
+    </div>
+
+    <form method="GET" action="{{ url_for('admin_organizations') }}" class="filters">
+        <label for="filter-type-org">Filter op type:</label>
+        <select id="filter-type-org" name="type">
+            <option value="" {% if not org_type %}selected{% endif %}>Alle</option>
+            <option value="commercieel" {% if org_type=='commercieel' %}selected{% endif %}>Commercieel</option>
+            <option value="non-profit" {% if org_type=='non-profit' %}selected{% endif %}>Non-profit</option>
+        </select>
+
+        <label for="search-organizations">Zoeken:</label>
+        <input type="search" id="search-organizations" name="search" value="{{ search }}" placeholder="Zoek op naam...">
+
+        <button type="submit" class="btn btn-primary">Zoeken</button>
+    </form>
+
+    <div class="table-wrapper">
+        <table>
+            <caption class="visually-hidden">Lijst van alle organisaties</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Naam</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Contactpersoon</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Acties</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for org in organization %}
+                <tr>
+                    <td>{{ org.name }}</td>
+                    <td>{{ org.type }}</td>
+                    <td>{{ org.contact_person }}</td>
+                    <td>{{ org.email }}</td>
+                    <td>{{ org.phone }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('admin_accept_organization', organization_id=org.id) }}">
+                            <select name="user_id" required>
+                                <label for="user_id">Kies gebruiker</label>
+                                <option value="" selected disabled>-- Kies gebruiker --</option>
+                                {% for user in user_list %}
+                                {% if user.role != 'admin' %}
+                                <option value="{{ user.id }}" {% if org.user_id==user.id %} selected {% endif %}>
+                                    {{ user.email }} | {{ user.role }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                            <button type="submit" name="action" value="accept"
+                                class="btn btn-secondary">Goedkeuren</button>
+                            <button type="submit" name="action" value="nieuw" class="btn btn-secondary">Reset</button>
+                        </form>
+
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+
+                            <a href="{{ url_for('admin_organization_details', organization_id=org.id)}}"
+                                class="btn btn-success">Bekijken</a>
+                            <a href="{{ url_for('admin_organization_edit', organization_id=org.id)}}"
+                                class="btn btn-primary">Bewerken</a>
+
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination" role="navigation" aria-label="Pagina navigatie">
+        {% if page > 1 %}
+        <a href="{{ url_for('admin_organizations', page=page-1, search=search, type=org_type) }}"
+            aria-label="Vorige pagina">‹ Vorige</a>
+        {% endif %}
+
+        {% for p in range(1, total_pages + 1) %}
+        {% if p == page %}
+        <span aria-current="page" class="current">{{ p }}</span>
+        {% elif p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %} <a
+            href="{{ url_for('admin_organizations', page=p, search=search, type=org_type) }}">{{ p }}</a>
+            {% elif p == page - 3 or p == page + 3 %}
+            <span>...</span>
+            {% endif %}
+            {% endfor %}
+
+            {% if page < total_pages %} <a
+                href="{{ url_for('admin_organizations', page=page+1, search=search, type=org_type) }}"
+                aria-label="Volgende pagina">Volgende ›</a>
+                {% endif %}
+    </div>
+</section>
+{% endblock %}

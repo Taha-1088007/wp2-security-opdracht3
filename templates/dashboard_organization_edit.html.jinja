@@ -1,0 +1,28 @@
+{% extends "layouts/organization_base.html.jinja" %}
+{% block main %}
+
+<nav>
+    <a href="/organization/dashboard">Terug naar overzicht onderzoek</a>
+</nav>
+<section>
+    <h1> Onderzoek bewerken</h1>
+    <form method="post">
+        <label for="title">Titel</label>
+        <input type="text" id="title" name="title" value="{{ study['title'] }}" required>
+
+        <label for="start_date">Startdatum</label>
+        <input type="date" id="start_date" name="start_date" value="{{ study['start_date'] }}" required>
+
+        <label for="end_date">Einddatum</label>
+        <input type="date" id="end_date" name="end_date" value="{{ study['end_date'] }}" required>
+
+        <label for="reward">Beloning</label>
+        <input type="text" id="reward" name="reward" value="{{ study['reward'] or ''}}">
+
+        <label for="description">Beschrijving</label>
+        <textarea id="description" name="description" required>{{ study['description'] }}</textarea>
+
+        <button type="submit">Gegevens opslaan</button>
+    </form>
+</section>
+{% endblock %}

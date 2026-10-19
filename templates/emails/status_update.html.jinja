@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="nl">
+  <body>
+    <p>Beste {{ recipient_name or "gebruiker" }},</p>
+
+    <p>
+      De status van uw <strong>{{ item_type }}</strong> is gewijzigd naar:
+      <strong>{{ status }}</strong>.
+    </p>
+
+    <p>
+      Titel/naam: <strong>{{ item_title }}</strong>
+    </p>
+
+    <p>Met vriendelijke groet, <br> Accessibility Hub </p>
+  </body>
+</html>

@@ -1,0 +1,188 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Expert Bewerken{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_form.css') }}">
+{% endblock %}
+
+{% block content %}
+<nav aria-label="Breadcrumb navigatie" class="breadcrumb">
+    <ol>
+        <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('admin_experts') }}">Ervaringsdeskundigen</a></li>
+        <li aria-current="page">{{ expert[3] }} {{ expert[4] }} Bewerken</li>
+    </ol>
+</nav>
+
+<div class="form-header">
+    <h1>Ervaringsdeskundige Bewerken</h1>
+    <p class="form-description">{{ expert[3] }} {{ expert[4] }}</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('admin_expert_edit', expert_id=expert[0]) }}" class="edit-form">
+    <section class="form-section">
+        <h2>Accountgegevens</h2>
+
+        <div class="form-group">
+            <label for="email">E-mailadres *</label>
+            <input type="email" id="email" name="email" value="{{ form_data.email if form_data else expert[1] }}"
+                required>
+            {% if errors and errors.email %}
+            <span class="error-message">{{ errors.email }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="status">Status *</label>
+            <select id="status" name="status" required>
+                <option value="nieuw" {% if (form_data and form_data.status=='nieuw' ) or (not form_data and
+                    expert[2]=='nieuw' ) %}selected{% endif %}>Nieuw</option>
+                <option value="goedgekeurd" {% if (form_data and form_data.status=='goedgekeurd' ) or (not form_data and
+                    expert[2]=='goedgekeurd' ) %}selected{% endif %}>Goedgekeurd</option>
+                <option value="afgekeurd" {% if (form_data and form_data.status=='afgekeurd' ) or (not form_data and
+                    expert[2]=='afgekeurd' ) %}selected{% endif %}>Afgekeurd</option>
+            </select>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <h2>Persoonlijke Gegevens</h2>
+
+        <div class="form-group">
+            <label for="first_name">Voornaam *</label>
+            <input type="text" id="first_name" name="first_name"
+                value="{{ form_data.first_name if form_data else (expert[3] if expert[3] else '') }}" required>
+            {% if errors and errors.first_name %}
+            <span class="error-message">{{ errors.first_name }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="last_name">Achternaam *</label>
+            <input type="text" id="last_name" name="last_name"
+                value="{{ form_data.last_name if form_data else (expert[4] if expert[4] else '') }}" required>
+            {% if errors and errors.last_name %}
+            <span class="error-message">{{ errors.last_name }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="birth_date">Geboortedatum</label>
+            <input type="date" id="birth_date" name="birth_date"
+                value="{{ form_data.birth_date if form_data else (expert[5] if expert[5] else '') }}">
+            {% if errors and errors.birth_date %}
+            <span class="error-message">{{ errors.birth_date }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="gender">Geslacht</label>
+            <select id="gender" name="gender">
+                <option value="">Selecteer...</option>
+                <option value="man" {% if (form_data and form_data.gender=='man' ) or (not form_data and
+                    expert[6]=='man' ) %}selected{% endif %}>Man</option>
+                <option value="vrouw" {% if (form_data and form_data.gender=='vrouw' ) or (not form_data and
+                    expert[6]=='vrouw' ) %}selected{% endif %}>Vrouw</option>
+                <option value="anders" {% if (form_data and form_data.gender=='anders' ) or (not form_data and
+                    expert[6]=='anders' ) %}selected{% endif %}>Anders</option>
+                <option value="zeg ik liever niet" {% if (form_data and form_data.gender=='zeg ik liever niet' ) or (not
+                    form_data and expert[6]=='zeg ik liever niet' ) %}selected{% endif %}>Zeg ik liever
+                    niet</option>
+            </select>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <h2>Contactgegevens</h2>
+
+        <div class="form-group">
+            <label for="postcode">Postcode</label>
+            <input type="text" id="postcode" name="postcode"
+                value="{{ form_data.postcode if form_data else (expert[7] if expert[7] else '') }}"
+                placeholder="1234AB">
+            {% if errors and errors.postcode %}
+            <span class="error-message">{{ errors.postcode }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Telefoonnummer</label>
+            <input type="tel" id="phone" name="phone"
+                value="{{ form_data.phone if form_data else (expert[8] if expert[8] else '') }}"
+                placeholder="0612345678">
+            {% if errors and errors.phone %}
+            <span class="error-message">{{ errors.phone }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="contact_preference">Voorkeur contact</label>
+            <select id="contact_preference" name="contact_preference">
+                <option value="">Selecteer...</option>
+                <option value="e-mail" {% if (form_data and form_data.contact_preference=='e-mail' ) or (not form_data
+                    and expert[17]=='e-mail' ) %}selected{% endif %}>E-mail</option>
+                <option value="telefoon" {% if (form_data and form_data.contact_preference=='telefoon' ) or (not
+                    form_data and expert[17]=='telefoon' ) %}selected{% endif %}>Telefoon</option>
+            </select>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <h2>Voorkeuren en Beschikbaarheid</h2>
+
+        <div class="form-group">
+            <label for="assistive_tools">Hulpmiddelen</label>
+            <textarea id="assistive_tools" name="assistive_tools" rows="3"
+                placeholder="Beschrijf eventuele hulpmiddelen die gebruikt worden...">{{ expert[9] if expert[9] else '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="preferred_study_type">Type onderzoek voorkeur</label>
+            <select id="preferred_study_type" name="preferred_study_type">
+                <option value="">Selecteer...</option>
+                <option value="online" {% if expert[18]=='online' %}selected{% endif %}>Online</option>
+                <option value="telefonisch" {% if expert[18]=='telefonisch' %}selected{% endif %}>Telefonisch
+                </option>
+                <option value="op locatie" {% if expert[18]=='op locatie' %}selected{% endif %}>Op locatie
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="availability">Beschikbaarheid</label>
+            <textarea id="availability" name="availability" rows="3"
+                placeholder="Beschrijf de beschikbaarheid...">{{ expert[19] if expert[19] else '' }}</textarea>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <h2>Overige Informatie</h2>
+
+        <div class="form-group">
+            <label for="intro">Korte intro</label>
+            <textarea id="intro" name="intro" rows="4"
+                placeholder="Een korte introductie over de ervaringsdeskundige...">{{ expert[10] if expert[10] else '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="notes">Bijzonderheden</label>
+            <textarea id="notes" name="notes" rows="4"
+                placeholder="Eventuele bijzonderheden...">{{ expert[11] if expert[11] else '' }}</textarea>
+        </div>
+    </section>
+
+    <div class="form-actions">
+        <a href="{{ url_for('admin_experts') }}" class="btn btn-secondary">Annuleren</a>
+        <button type="submit" class="btn btn-primary">Opslaan</button>
+    </div>
+</form>
+{% endblock %}

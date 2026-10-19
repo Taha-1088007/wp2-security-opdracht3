@@ -1,0 +1,118 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Inschrijving Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_detail.css') }}">
+{% endblock %}
+
+{% block content %}
+{% if enrollment %}
+{% set en = enrollment %}
+
+<nav aria-label="Breadcrumb navigatie" class="breadcrumb">
+    <ol>
+        <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('admin_enrollments') }}">Inschrijvingen</a></li>
+        <li aria-current="page">Inschrijving #{{ en["enrollment_id"] }}</li>
+    </ol>
+</nav>
+
+<div class="detail-header">
+    <h1>Inschrijving Details</h1>
+    <span class="status-badge status-{{ en['enrollment_status'] }}">{{ en["enrollment_status"]|capitalize
+        }}</span>
+</div>
+
+<section class="detail-section" aria-labelledby="inschrijving-info">
+    <h2 id="inschrijving-info">Inschrijving Informatie</h2>
+    <dl class="detail-grid">
+        <dt>Inschrijving ID:</dt>
+        <dd># {{ en["enrollment_id"] }}</dd>
+
+        <dt>Inschrijving datum:</dt>
+        <dd>{{ en["enrollment_created_at"] }}</dd>
+
+        <dt>Status:</dt>
+        <dd><span class="status-badge status-{{ en['enrollment_status'] }}">{{
+                en["enrollment_status"]|capitalize }}</span></dd>
+
+    </dl>
+</section>
+
+<section class="detail-section" aria-labelledby="deelnemer-info">
+    <h2 id="deelnemer-info">Ervaringsdeskundige</h2>
+    <dl class="detail-grid">
+        <dt>Naam:</dt>
+        <dd>{{ en["first_name"] }} {{ en["last_name"] }}</dd>
+
+        <dt>Email:</dt>
+        <dd><a href="mailto:{{ en[" email"] }}">{{ en["email"] }}</a></dd>
+
+        <dt>Telefoon:</dt>
+        <dd><a href="tel:{{ en['phone'] }}">{{ en["phone"] }}</a></dd>
+
+        <dt>Geboortedatum:</dt>
+        <dd>{{ en["birth_date"] }}</dd>
+
+        <dt>Beperkingen:</dt>
+        <dd>
+            <ul class="tag-list">
+                <li>{{ en["disability"] if en["disability"] else "Niet opgegeven" }}</li>
+            </ul>
+        </dd>
+
+        <dt>Hulpmiddelen:</dt>
+        <dd>{{ en["assistive_tools"] if en["assistive_tools"] else "Niet opgegeven" }}</dd>
+
+        <dt>Type onderzoek voorkeur:</dt>
+        <dd>{{ en["preferred_study_type"] if en["preferred_study_type"] else "Niet opgegeven" }}</dd>
+    </dl>
+</section>
+
+<section class="detail-section" aria-labelledby="onderzoek-info">
+    <h2 id="onderzoek-info">Onderzoek</h2>
+    <dl class="detail-grid">
+        <dt>Titel:</dt>
+        <dd>{{ en["study_title"] }}</dd>
+
+        <dt>Organisatie:</dt>
+        <dd>{{ en["organization_name"] }}</dd>
+
+        <dt>Type onderzoek:</dt>
+        <dd>{{ en["study_type"] }}</dd>
+
+        <dt>Datum vanaf:</dt>
+        <dd>{{ en["study_start_date"] }}</dd>
+
+        <dt>Datum tot:</dt>
+        <dd>{{ en["study_end_date"] }}</dd>
+
+        <dt>Beloning:</dt>
+        <dd>{{ en["study_reward"] }}</dd>
+
+        <dt>Onderzoek status:</dt>
+        <dd><span class="status-badge status-{{ en[" study_status"] }}">{{ en["study_status"] }}</span></dd>
+    </dl>
+</section>
+
+<div class="action-bar">
+    <a href="{{ url_for('admin_enrollments') }}" class="btn btn-secondary">Terug</a>
+    {% if en["enrollment_status"] == "nieuw" %}
+    <div class="action-buttons">
+        <form method="post" action="{{ url_for('approve_enrollment', enroll_id=en['enrollment_id']) }}"
+            style="display: inline;">
+            <button type="submit" class="btn btn-success">Goedkeuren</button>
+        </form>
+        <form method="post" action="{{ url_for('reject_enrollment', enroll_id=en['enrollment_id']) }}"
+            style="display: inline;">
+            <button type="submit" class="btn btn-danger">Afkeuren</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+{% else %}
+<p>Geen inschrijving gevonden.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "layouts/base.html.jinja" %}
+{% block main %}
+<section class="profile-section" id="nieuwe-registraties" aria-labelledby="registraties-heading">
+    <h2 id="registraties-heading">Profiel Aanmaken</h2>
+
+    <form method="post" action="/createprofile">
+        <caption class="visually-hidden">Creer Profiel pagina</caption>
+        <input type="hidden" name="user_id" id="user-id" value="{{ new_user }}">
+        <label for="first_name">Naam:</label>
+        <input type="text" name="first_name" id="first_name" value="">
+        <label for="last_name">Achternaam:</label>
+        <input type="text" name="last_name" id="last_name" value="">
+        <label for="postcode">Postcode:</label>
+        <input type="text" name="postcode" id="postcode" pattern="[1-9][0-9]{3}\s?[A-Za-z]{2}"
+            title="Vul postcode in bv. (1234AB)" value="">
+        <label for="gender">Geslacht:</label>
+        <select id="gender" name="gender">
+            <option value="V"> Vrouw </option>
+            <option value="M"> Man </option>
+        </select>
+
+        <label for="phone">Telefoon:</label>
+        <input type="tel" name="phone" id="phone" pattern="[0-9]{10}"
+            title="Telefoon nummer mag max 10 nummers bevatten" value="">
+        <label for="birth_date">Geboortedatum:</label>
+        <input type="date" name="birth_date" id="birth_date" value="">
+        <label for="assistive_tools">Hulpmiddelen:</label>
+        <input type="text" name="assistive_tools" id="assistive_tools" value="">
+        <label for="intro">Intro:</label>
+        <input type="text" name="intro" id="intro" value="">
+        <label for="notes">Notities:</label>
+        <input type="text" name="notes" id="notes" value="">
+
+        <label for="contact_preference">Voorkeur contact</label>
+        <select id="contact_preference" name="contact_preference">
+            <option value="telefoon">
+                Telefoon</option>
+            <option value="e-mail">
+                E-mail</option>
+        </select>
+
+        <label for="select_disability">Beperking:</label>
+        <select id="select_disability" name="select_disability">
+            {% for disability in all_disabilities %}
+                <option value="{{ disability["id"] }}">
+                    {{ disability["name"] }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" id="main-button" class="btn btn-primary">Opslaan</button>
+    </form>
+</section>
+{% endblock %}

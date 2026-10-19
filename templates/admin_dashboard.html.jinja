@@ -1,0 +1,252 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="visually-hidden">Dashboard Overzicht</h2>
+
+<div class="dashboard-summary" role="region" aria-label="Overzicht samenvattingen">
+    <div class="summary-card warning">
+        <h2>Nieuwe Registraties</h2>
+        <div class="count" aria-label="{{ new_experts_count }} nieuwe registraties">{{ new_experts_count }}
+        </div>
+        <a href="{{ url_for('admin_experts', status='nieuw') }}">Bekijk alle registraties</a>
+    </div>
+
+    <div class="summary-card warning">
+        <h2>Onderzoeken in Beoordeling</h2>
+        <div class="count" aria-label="{{ new_studies_count }} onderzoeken in beoordeling">{{ new_studies_count
+            }}</div>
+        <a href="{{ url_for('admin_studies', status='nieuw') }}">Bekijk alle onderzoeken</a>
+    </div>
+
+    <div class="summary-card warning">
+        <h2>Nieuwe Inschrijvingen</h2>
+        <div class="count" aria-label="{{ new_enrollments_count }} nieuwe inschrijvingen">{{
+            new_enrollments_count }}</div>
+        <a href="{{ url_for('admin_enrollments', status='nieuw') }}">Bekijk alle inschrijvingen</a>
+    </div>
+
+    <div class="summary-card">
+        <h2>Totaal Organisaties</h2>
+        <div class="count" aria-label="{{ total_organizations_count }} organisaties">{{
+            total_organizations_count }}</div>
+        <a href="{{ url_for('admin_organizations') }}">Bekijk alle organisaties</a>
+    </div>
+</div>
+
+<!-- Nieuwe Registraties Sectie -->
+<section id="nieuwe-registraties" aria-labelledby="registraties-heading">
+    <h2 id="registraties-heading">Nieuwe Registraties</h2>
+
+    <table>
+        <caption class="visually-hidden">Lijst met nieuwe registraties van ervaringsdeskundigen</caption>
+        <thead>
+            <tr>
+                <th scope="col">Naam</th>
+                <th scope="col">Email</th>
+                <th scope="col">Geboortedatum</th>
+                <th scope="col">Beperkingen</th>
+                <th scope="col">Status</th>
+                <th scope="col">Acties</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if new_experts %}
+            {% for expert in new_experts %}
+            <tr>
+                <td>{{ expert[3] }} {{ expert[4] }}</td>
+                <td>{{ expert[1] }}</td>
+                <td>{{ expert[5] if expert[5] else '-' }}</td>
+                <td>{{ expert[6] if expert[6] else 'Geen' }}</td>
+                <td><span class="status-badge status-nieuw">Nieuw</span></td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{{ url_for('admin_expert_detail', id=expert[0]) }}"
+                            class="btn btn-secondary">Bekijken</a>
+                        <form method="post" action="{{ url_for('approve_expert', expert_id=expert[0]) }}"
+                            style="display: inline;">
+                            <button type="submit" class="btn btn-success">Goedkeuren</button>
+                        </form>
+                        <form method="post" action="{{ url_for('reject_expert', expert_id=expert[0]) }}"
+                            style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Afkeuren</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Geen nieuwe registraties</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <div class="pagination-info">
+        <a href="{{ url_for('admin_experts', status='nieuw') }}" class="btn btn-primary">Bekijk alle nieuwe
+            registraties</a>
+    </div>
+</section>
+
+<section id="onderzoeken-beoordeling" aria-labelledby="onderzoeken-heading">
+    <h2 id="onderzoeken-heading">Onderzoeken in Beoordeling</h2>
+
+    <table>
+        <caption class="visually-hidden">Lijst met onderzoeken die beoordeling nodig hebben</caption>
+        <thead>
+            <tr>
+                <th scope="col">Titel</th>
+                <th scope="col">Organisatie</th>
+                <th scope="col">Datum</th>
+                <th scope="col">Type</th>
+                <th scope="col">Status</th>
+                <th scope="col">Acties</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if new_studies %}
+            {% for study in new_studies %}
+            <tr>
+                <td>{{ study[2] }}</td>
+                <td>{{ study[14] if study[14] else '-' }}</td>
+                <td>{{ study[6] }} tot {{ study[7] }}</td>
+                <td>{{ study[8] if study[8] else '-' }}</td>
+                <td><span class="status-badge status-nieuw">Nieuw</span></td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{{ url_for('admin_detail', study_id=study[0]) }}"
+                            class="btn btn-secondary">Bekijken</a>
+                        <form method="post" action="{{ url_for('admin_approve_study', study_id=study[0]) }}"
+                            style="display: inline;">
+                            <button type="submit" class="btn btn-success">Goedkeuren</button>
+                        </form>
+                        <form method="post" action="{{ url_for('admin_reject_study', study_id=study[0]) }}"
+                            style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Afkeuren</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Geen nieuwe onderzoeken in beoordeling</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <div class="pagination-info">
+        <a href="{{ url_for('admin_studies', status='nieuw') }}" class="btn btn-primary">Bekijk alle onderzoeken
+            in beoordeling</a>
+    </div>
+</section>
+
+<section id="nieuwe-inschrijvingen" aria-labelledby="inschrijvingen-heading">
+    <h2 id="inschrijvingen-heading">Nieuwe Inschrijvingen</h2>
+
+    <table>
+        <caption class="visually-hidden">Lijst met nieuwe inschrijvingen voor onderzoeken</caption>
+        <thead>
+            <tr>
+                <th scope="col">Ervaringsdeskundige</th>
+                <th scope="col">Onderzoek</th>
+                <th scope="col">Datum Inschrijving</th>
+                <th scope="col">Status</th>
+                <th scope="col">Acties</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if new_enrollments %}
+            {% for enrollment in new_enrollments %}
+            <tr>
+                <td>{{ enrollment['first_name'] }} {{ enrollment['last_name'] }}</td>
+                <td>{{ enrollment['study_title'] }}</td>
+                <td>{{ enrollment['enrollment_created_at'] }}</td>
+                <td><span class="status-badge status-nieuw">Nieuw</span></td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{{ url_for('admin_enrollment_detail', enroll_id=enrollment['enrollment_id']) }}"
+                            class="btn btn-secondary">Bekijken</a>
+                        <form method="post"
+                            action="{{ url_for('approve_enrollment', enroll_id=enrollment['enrollment_id']) }}"
+                            style="display: inline;">
+                            <button type="submit" class="btn btn-success">Goedkeuren</button>
+                        </form>
+                        <form method="post"
+                            action="{{ url_for('reject_enrollment', enroll_id=enrollment['enrollment_id']) }}"
+                            style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Afkeuren</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="5" style="text-align: center;">Geen nieuwe inschrijvingen</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <div class="pagination-info">
+        <a href="{{ url_for('admin_enrollments', status='nieuw') }}" class="btn btn-primary">Bekijk alle nieuwe
+            inschrijvingen</a>
+    </div>
+</section>
+
+<section id="organisaties" aria-labelledby="organisaties-heading">
+    <div class="section-header">
+        <h2 id="organisaties-heading">Organisaties</h2>
+        <a href="{{ url_for('admin_organization_new') }}" class="btn btn-primary">+ Nieuwe Organisatie
+            Toevoegen</a>
+    </div>
+
+    <table>
+        <caption class="visually-hidden">Lijst met alle organisaties</caption>
+        <thead>
+            <tr>
+                <th scope="col">Naam</th>
+                <th scope="col">Type</th>
+                <th scope="col">Contactpersoon</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telefoon</th>
+                <th scope="col">Acties</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if latest_organizations %}
+            {% for org in latest_organizations %}
+            <tr>
+                <td>{{ org[1] }}</td>
+                <td>{{ org[2] if org[2] else '-' }}</td>
+                <td>{{ org[5] if org[5] else '-' }}</td>
+                <td>{{ org[6] if org[6] else '-' }}</td>
+                <td>{{ org[7] if org[7] else '-' }}</td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="{{ url_for('admin_organization_details', organization_id=org[0]) }}"
+                            class="btn btn-secondary">Bekijken</a>
+                        <a href="{{ url_for('admin_organization_edit', organization_id=org[0]) }}"
+                            class="btn btn-primary">Bewerken</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="6" style="text-align: center;">Geen organisaties</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <div class="pagination-info">
+        <a href="{{ url_for('admin_organizations') }}" class="btn btn-primary">Bekijk alle organisaties</a>
+    </div>
+</section>
+</main>
+{% endblock %}

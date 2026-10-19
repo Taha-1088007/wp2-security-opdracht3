@@ -1,0 +1,28 @@
+{% extends "layouts/organization_base.html.jinja" %}
+{% block main %}
+    <a href ="#main-content" class="skip-link">Spring naar hoofdinhoud</a>
+        <nav id="main-content" aria-label="Terug naar navigatie">
+            <a href="/organization/dashboard">Terug naar overzicht onderzoek</a>
+        </nav>
+            <section>
+                <h1>Nieuw Onderzoek aanmaken</h1>
+                <form method="post">
+                        <label for ="title">Titel</label>
+                        <input type ="text" id="title" name="title" required>
+
+                        <label for ="start_date">Startdatum</label>
+                        <input type="date" id="start_date" name="start_date" required>
+
+                        <label for="end_date">Einddatum</label>
+                        <input type="date" id="end_date" name="end_date" required>
+
+                        <label for="reward">Beloning</label>
+                        <input type="text" id="reward" name ="reward">
+
+                        <label for ="description">Beschrijving</label>
+                        <textarea id="description" name="description" required></textarea>
+
+                        <button type="submit">Aanmaken</button>
+                </form>
+            </section>
+    {% endblock %}

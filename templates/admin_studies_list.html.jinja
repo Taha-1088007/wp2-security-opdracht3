@@ -1,0 +1,108 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Onderzoeken{% endblock %}
+
+{% block content %}
+<h2>Onderzoeken</h2>
+
+<section aria-labelledby="studies-heading">
+    <div class="section-header">
+        <h3 id="studies-heading">Alle Onderzoeken</h3>
+        <a href="{{ url_for('export_studies_csv') }}" class="btn btn-primary">Exporteer Onderzoeken (CSV)</a>
+    </div>
+
+    <form method="GET" action="{{ url_for('admin_studies') }}" class="filters">
+        <label for="filter-status-studies">Filter op status:</label>
+        <select id="filter-status-studies" name="status">
+            <option value="" {% if not status %}selected{% endif %}>Alle</option>
+            <option value="nieuw" {% if status=='nieuw' %}selected{% endif %}>Nieuw</option>
+            <option value="goedgekeurd" {% if status=='goedgekeurd' %}selected{% endif %}>Goedgekeurd</option>
+            <option value="afgekeurd" {% if status=='afgekeurd' %}selected{% endif %}>Afgekeurd</option>
+            <option value="gesloten" {% if status=='gesloten' %}selected{% endif %}>Gesloten</option>
+        </select>
+
+        <label for="search-studies">Zoeken:</label>
+        <input type="search" id="search-studies" name="search" value="{{ search }}" placeholder="Zoek op titel...">
+
+        <button type="submit" class="btn btn-primary">Zoeken</button>
+    </form>
+
+    <div class="table-wrapper">
+        <table>
+            <caption class="visually-hidden">Lijst van alle onderzoeken</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Titel</th>
+                    <th scope="col">Organisatie</th>
+                    <th scope="col">Periode</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for study in studies %}
+                <tr>
+                    <td>{{ study[2] }}</td> {# title #}
+                    <td>{{ study[14] or 'Geen organisatie' }}</td> {# org_name from JOIN #}
+                    <td>{{ study[6] }} tot {{ study[7] }}</td> {# start_date tot end_date #}
+                    <td>{{ study[8] or '-' }}</td> {# study_type #}
+                    <td><span class="status-badge status-{{ study[3] }}">{{ study[3]}}</span></td> {# status #}
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{{ url_for('admin_detail', study_id=study[0]) }}"
+                                class="btn btn-secondary">Bekijken</a>
+                            <a href="{{ url_for('admin_study_edit', study_id=study[0]) }}"
+                                class="btn btn-primary">Bewerken</a>
+                            {% if study[3] =="nieuw" %}
+                            <form method="post" action="/admin/approve-study/{{ study[0] }}" style="display:
+                                     inline;">
+                                <button type="submit" class="btn btn-success">Goedkeuren</button>
+                            </form>
+                            <form method="post" action="/admin/reject-study/{{ study[0] }}" style="display: inline;">
+                                <button type="submit" class="btn btn-danger">Afkeuren</button>
+                            </form>
+                            {% endif %}
+
+                            {% if study[3] == "goedgekeurd" %}
+                            <form method="post" action="/admin/close-study/{{ study[0] }}" style="display: inline;">
+                                <button type="submit" class="btn btn-secondary">
+                                    Sluiten
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6"> Geen onderzoeken gevonden.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination" role="navigation" aria-label="Pagina navigatie">
+        {% if page > 1 %}
+        <a href="{{ url_for('admin_studies', page=page-1, search=search, status=status) }}" aria-label="Vorige pagina">‹
+            Vorige</a>
+        {% endif %}
+
+        {% for p in range(1, total_pages + 1) %}
+        {% if p == page %}
+        <span aria-current="page" class="current">{{ p }}</span>
+        {% elif p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %} <a
+            href="{{ url_for('admin_studies', page=p, search=search, status=status) }}">{{ p }}</a>
+            {% elif p == page - 3 or p == page + 3 %}
+            <span>...</span>
+            {% endif %}
+            {% endfor %}
+
+            {% if page < total_pages %} <a
+                href="{{ url_for('admin_studies', page=page+1, search=search, status=status) }}"
+                aria-label="Volgende pagina">Volgende ›</a>
+                {% endif %}
+    </div>
+</section>
+{% endblock %}

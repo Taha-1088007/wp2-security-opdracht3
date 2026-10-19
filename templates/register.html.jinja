@@ -1,0 +1,36 @@
+{% extends "layouts/base.html.jinja" %}
+{% block main %}
+        <div class="main-container">
+                    <section class="main">
+                        <form action="/signup" method="post" id="login-form">
+                            <br>
+                                    <label for="id_email" class="required">Email:</label>
+                                    <input type="text" name="email" autofocus="" maxlength="150" id="id_email" required>
+
+            {% if error %}
+            <label for="id_error">{{ error }}</label>
+            {% endif %}
+
+            <label for="id_password" class="required">Password:</label>
+            <input type="password" name="password" autocomplete="current-password" id="id_password" required>
+
+            <label for="id_password" class="required">Confirm Password:</label>
+            <input type="password" name="confirmpassword" autocomplete="current-password" id="id_confirmpassword"
+                required>
+            <br>
+
+            <div class="terms-row">
+                <label for="id_checkbox"> Voorwaarden: </label>
+                <input class="checkbox_unique" type="checkbox" name="accept_terms" required>
+                Ik accepteer de
+                <a href="{{ url_for('static', filename='files/registration_terms.pdf') }}" target="_blank"> voorwaarden
+                </a>
+            </div>
+
+                            <div class="submit-row">
+                                <input type="submit" class="submitbutton" value="Sign Up">
+                            </div>
+                        </form>
+                    </section>
+        </div>
+{% endblock %}

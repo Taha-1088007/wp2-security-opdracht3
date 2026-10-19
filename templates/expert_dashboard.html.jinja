@@ -1,0 +1,108 @@
+{% extends "layouts/expert_base.html.jinja" %}
+{% block main %}
+<h2 class="visually-hidden">Dashboard Overzicht</h2>
+
+{# <div class="dashboard-summary" role="region" aria-label="Overzicht samenvattingen">#}
+    {# <div class="summary-card warning">#}
+        {# <h2>Totaal voltooide onderzoeken</h2>#}
+        {# <div class="count" aria-label="5 nieuwe registraties">5</div>#}
+        {# <a href="#nieuwe-registraties">Bekijk voltooide onderzoeken →</a>#}
+        {# </div>#}
+    {##}
+    {# <div class="summary-card warning">#}
+        {# <h2>Onderzoeken in Beoordeling</h2>#}
+        {# <div class="count" aria-label="3 onderzoeken in beoordeling">3</div>#}
+        {# <a href="#onderzoeken-beoordeling">Bekijk alle onderzoeken →</a>#}
+        {# </div>#}
+    {##}
+    {# <div class="summary-card warning">#}
+        {# <h2>Nieuwe Inschrijvingen</h2>#}
+        {# <div class="count" aria-label="8 nieuwe inschrijvingen">8</div>#}
+        {# <a href="#nieuwe-inschrijvingen">Bekijk alle inschrijvingen →</a>#}
+        {# </div>#}
+    {# </div>#}
+
+<section id="nieuwe-registraties" aria-labelledby="registraties-heading">
+    <h2 id="registraties-heading">Nieuwe Registraties</h2>
+
+    <table>
+        <caption class="visually-hidden">Lijst met nieuwe registraties van ervaringsdeskundigen</caption>
+        <thead>
+            <tr>
+                <th scope="col">Naam</th>
+                <th scope="col">Email</th>
+                <th scope="col">Geboortedatum</th>
+                <th scope="col">Beperkingen</th>
+                <th scope="col">Status</th>
+                <th scope="col">Acties</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>Jan de Vries</td>
+                <td>jan.devries@email.nl</td>
+                <td>15-03-1985</td>
+                <td>Slechtziend</td>
+                <td><span class="status-badge status-nieuw">Nieuw</span></td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="/admin/experts" class="btn btn-secondary">Bekijken</a>
+                        <form method="post" action="/admin/approve-expert/1" style="display: inline;">
+                            <button type="submit" class="btn btn-success">Goedkeuren</button>
+                        </form>
+                        <form method="post" action="/admin/reject-expert/1" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Afkeuren</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Maria Jansen</td>
+                <td>maria.jansen@email.nl</td>
+                <td>22-07-1992</td>
+                <td>Doof, ADHD</td>
+                <td><span class="status-badge status-nieuw">Nieuw</span></td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="/admin/experts" class="btn btn-secondary">Bekijken</a>
+                        <form method="post" action="/admin/approve-expert/2" style="display: inline;">
+                            <button type="submit" class="btn btn-success">Goedkeuren</button>
+                        </form>
+                        <form method="post" action="/admin/reject-expert/2" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Afkeuren</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Peter Bakker</td>
+                <td>peter.bakker@email.nl</td>
+                <td>10-11-1978</td>
+                <td>RSI, Artritis</td>
+                <td><span class="status-badge status-nieuw">Nieuw</span></td>
+                <td>
+                    <div class="action-buttons">
+                        <a href="/admin/experts" class="btn btn-secondary">Bekijken</a>
+                        <form method="post" action="/admin/approve-expert/3" style="display: inline;">
+                            <button type="submit" class="btn btn-success">Goedkeuren</button>
+                        </form>
+                        <form method="post" action="/admin/reject-expert/3" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Afkeuren</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <nav class="pagination" aria-label="Paginatie voor registraties">
+        <a href="#" aria-label="Vorige pagina">← Vorige</a>
+        <a href="#" aria-label="Pagina 1">1</a>
+        <span class="current" aria-current="page" aria-label="Huidige pagina, pagina 2">2</span>
+        <a href="#" aria-label="Pagina 3">3</a>
+        <a href="#" aria-label="Volgende pagina">Volgende →</a>
+    </nav>
+</section>
+
+{% endblock %}

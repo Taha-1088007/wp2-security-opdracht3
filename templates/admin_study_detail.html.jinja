@@ -1,0 +1,148 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Onderzoek Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_detail.css') }}">
+{% endblock %}
+
+{% block content %}
+<nav aria-label="Breadcrumb navigatie" class="breadcrumb">
+    <ol>
+        <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('admin_studies') }}">Onderzoeken</a></li>
+        <li aria-current="page">{{ study[2] }}</li>
+    </ol>
+</nav>
+
+<div class="detail-header">
+    <h1>{{ study[2]}} </h1>
+    <span class="status-badge status-{{ study[3] }}">{{ study[3] }}</span>
+</div>
+
+<section class="detail-section" aria-labelledby="basis-info">
+    <h2 id="basis-info">Basis Informatie</h2>
+    <dl class="detail-grid">
+        <dt>Titel:</dt>
+        <dd>{{ study[2] }}</dd>
+
+        <dt>Organisatie:</dt>
+        <dd>{{ study[14] }}</dd>
+
+        <dt>Status:</dt>
+        <dd><span class="status-badge status-{{ study[3] }}">{{ study[3]|capitalize }}</span></dd>
+
+        <dt>Beschikbaar voor inschrijving:</dt>
+        <dd>
+            {% if study[4] == 1 %}
+            ✓ Ja
+            {% else%}
+            ✗ Nee
+            {% endif %}
+        </dd>
+
+        <dt>Type onderzoek:</dt>
+        <dd>{{ study[8]|capitalize if study[8] else "Niet opgegeven" }}</dd>
+
+        {% if study[8] == "op locatie" and study[9] %}
+        <dt>Locatie:</dt>
+        <dd>{{ study[9] }}</dd>
+        {% endif %}
+
+        <dt>Datum vanaf:</dt>
+        <dd>{{ study[6] }}</dd>
+
+        <dt>Datum tot:</dt>
+        <dd>{{ study[7] }}</dd>
+    </dl>
+</section>
+
+<section class="detail-section" aria-labelledby="beschrijving-info">
+    <h2 id="beschrijving-info">Beschrijving</h2>
+    <p class="description-text">
+        {{ study[5] }}
+    </p>
+</section>
+
+<section class="detail-section" aria-labelledby="doelgroep-info">
+    <h2 id="doelgroep-info">Doelgroep</h2>
+    <dl class="detail-grid">
+        <dt>Leeftijd vanaf:</dt>
+        <dd>{{ study[12] if study[12] else "Niet gespecificeerd" }} {% if study[12] %}jaar{% endif %}</dd>
+
+        <dt>Leeftijd tot:</dt>
+        <dd>{{ study[13] if study[13] else "Niet gespecificeerd" }} {% if study[13] %}jaar{% endif %}</dd>
+
+        <dt>Gewenste beperkingen:</dt>
+        <dd>
+            {% if study_disabilities %}
+            {% set current_category = namespace(value='') %}
+            {% for disability in study_disabilities %}
+            {% if disability[0] != current_category.value %}
+            {% if current_category.value != '' %}</ul>{% endif %}
+            <h4>{{ disability[0] }}</h4>
+            <ul class="tag-list">
+                {% set current_category.value = disability[0] %}
+                {% endif %}
+                <li>{{ disability[1] }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <em>Geen specifieke beperkingen - geschikt voor alle doelgroepen</em>
+            {% endif %}
+        </dd>
+    </dl>
+</section>
+
+<section class="detail-section" aria-labelledby="beloning-info">
+    <h2 id="beloning-info">Beloning</h2>
+    <dl class="detail-grid">
+        <dt>Met beloning:</dt>
+        <dd>{% if study[10] == 1 %}✓ Ja{% else %}✗ Nee{% endif %}</dd>
+
+        {% if study[10] == 1 and study[11] %}
+        <dt>Beloning details:</dt>
+        <dd>{{ study[11] }}</dd>
+        {% endif %}
+    </dl>
+</section>
+
+<section class="detail-section" aria-labelledby="contactpersoon-info">
+    <h2 id="contactpersoon-info">Contactpersoon Organisatie</h2>
+    <p><em>Contactgegevens organisatie: {{ study[14] }}</em></p>
+</section>
+
+<section class="detail-section" aria-labelledby="inschrijvingen-info">
+    <h2 id="inschrijvingen-info">Inschrijvingen</h2>
+    <p><em>Inschrijvingsstatistieken worden later toegevoegd</em></p>
+</section>
+
+<section class="detail-section" aria-labelledby="metadata-info">
+    <h2 id="metadata-info">Status Informatie</h2>
+    <dl class="detail-grid">
+        <dt>Huidige status:</dt>
+        <dd><span class="status-badge status-{{ study[3] }}">{{ study[3]|capitalize }}</span></dd>
+
+        <dt>Beschikbaar voor inschrijving:</dt>
+        <dd>{% if study[4] %}✓ Ja{% else %}✗ Nee{% endif %}</dd>
+    </dl>
+</section>
+
+<div class="action-bar">
+    <a href="{{ url_for('admin_studies') }}" class="btn btn-secondary">← Terug</a>
+    <div class="action-buttons">
+
+        {% if study[3] =="nieuw" %}
+        <form method="post" action="{{ url_for('admin_approve_study', study_id=study[0]) }}" style="display: inline;">
+            <button type="submit" class="btn btn-success">Goedkeuren</button>
+        </form>
+        <form method="post" action="{{ url_for('admin_reject_study', study_id=study[0]) }}" style="display: inline;">
+            <button type="submit" class="btn btn-danger">Afkeuren</button>
+        </form>
+        {% endif %}
+        <form method="post" action="{{ url_for('admin_close_study', study_id=study[0]) }}" style="display: inline;">
+            <button type="submit" class="btn btn-secondary">Sluiten</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

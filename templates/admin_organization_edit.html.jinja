@@ -1,0 +1,140 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Organisatie Bewerken{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_form.css') }}">
+{% endblock %}
+
+{% block content %}
+<nav aria-label="Breadcrumb navigatie" class="breadcrumb">
+    <ol>
+        <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('admin_organizations') }}">Organisaties</a></li>
+        <li aria-current="page">{{ organization[1] }} Bewerken</li>
+    </ol>
+</nav>
+
+<div class="form-header">
+    <h1>Organisatie Bewerken: {{ organization[1] }}</h1>
+    <p class="form-description">Wijzig de gegevens van de organisatie. Let op: wijzigingen worden direct
+        opgeslagen.</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form method="post" action="{{ url_for('admin_organization_edit', organization_id=organization[0]) }}"
+    class="detail-form">
+    <section class="form-section" aria-labelledby="basis-gegevens">
+        <h2 id="basis-gegevens">Basis Gegevens</h2>
+
+        <div class="form-group">
+            <label for="naam">
+                Organisatie Naam <span class="required">*</span>
+            </label>
+            <input type="text" id="naam" name="name" value="{{ form_data.name if form_data else organization[1] }}"
+                required maxlength="100">
+            {% if errors and errors.name %}
+            <span class="error-message">{{ errors.name }}</span>
+            {% endif %}
+            <span class="help-text">Volledige officiële naam van de organisatie</span>
+        </div>
+
+        <div class="form-group">
+            <label for="type">
+                Type Organisatie <span class="required">*</span>
+            </label>
+            <select id="type" name="org_type" required>
+                <option value="">-- Selecteer type --</option>
+                <option value="commercieel" {% if organization[2]=='commercieel' %}selected{% endif %}>
+                    Commercieel</option>
+                <option value="non-profit" {% if organization[2]=='non-profit' %}selected{% endif %}>Non-profit
+                </option>
+            </select>
+            <span class="help-text">Geeft aan of de organisatie commercieel of non-profit is</span>
+        </div>
+
+        <div class="form-group">
+            <label for="website">
+                Website
+            </label>
+            <input type="url" id="website" name="website" value="{{ organization[3] or '' }}"
+                placeholder="https://www.voorbeeld.nl">
+            <span class="help-text">Website URL van de organisatie (optioneel)</span>
+        </div>
+
+        <div class="form-group">
+            <label for="beschrijving">
+                Beschrijving
+            </label>
+            <textarea id="beschrijving" name="description" rows="4"
+                maxlength="500">{{ organization[4] or '' }}</textarea>
+            <span class="help-text">Korte beschrijving van de organisatie (max 500 tekens)</span>
+        </div>
+    </section>
+
+    <section class="form-section" aria-labelledby="contactgegevens">
+        <h2 id="contactgegevens">Contactgegevens</h2>
+
+        <div class="form-group">
+            <label for="contactpersoon">
+                Contactpersoon <span class="required">*</span>
+            </label>
+            <input type="text" id="contactpersoon" name="contact_person"
+                value="{{ form_data.contact_person if form_data else organization[5] }}" required maxlength="100">
+            {% if errors and errors.contact_person %}
+            <span class="error-message">{{ errors.contact_person }}</span>
+            {% endif %}
+            <span class="help-text">Naam van de contactpersoon binnen de organisatie</span>
+        </div>
+
+        <div class="form-group">
+            <label for="email">
+                Email <span class="required">*</span>
+            </label>
+            <input type="email" id="email" name="email" value="{{ form_data.email if form_data else organization[6] }}"
+                required>
+            {% if errors and errors.email %}
+            <span class="error-message">{{ errors.email }}</span>
+            {% endif %}
+            <span class="help-text">Email adres van de contactpersoon</span>
+        </div>
+
+        <div class="form-group">
+            <label for="telefoon">
+                Telefoonnummer
+            </label>
+            <input type="tel" id="telefoon" name="phone"
+                value="{{ form_data.phone if form_data else (organization[7] or '') }}" pattern="[0-9\-\+\s()]*"
+                placeholder="06-12345678 of 020-1234567">
+            {% if errors and errors.phone %}
+            <span class="error-message">{{ errors.phone }}</span>
+            {% endif %}
+            <span class="help-text">Telefoonnummer van de contactpersoon (optioneel)</span>
+        </div>
+    </section>
+
+    <section class="form-section" aria-labelledby="extra-info">
+        <h2 id="extra-info">Extra Informatie</h2>
+
+        <div class="form-group">
+            <label for="overige-details">
+                Overige Details
+            </label>
+            <textarea id="overige-details" name="details" rows="4">{{ organization[8] or '' }}</textarea>
+            <span class="help-text">Aanvullende informatie of bijzonderheden (optioneel)</span>
+        </div>
+    </section>
+
+    <div class="form-actions">
+        <a href="{{ url_for('admin_organizations') }}" class="btn btn-secondary">Annuleren</a>
+        <button type="submit" class="btn btn-success">Opslaan</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Beheerder Dashboard{% endblock %} - Accessibility Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Spring naar hoofdinhoud</a>
+
+    <header>
+        <h1>Accessibility Hub - Beheerder Portaal</h1>
+        <p>Welkom, Beheerder</p>
+    </header>
+
+    <nav aria-label="Hoofdnavigatie">
+        <ul>
+            <li><a href="{{ url_for('admin_dashboard') }}" {% if request.endpoint=='admin_dashboard' %}class="active"
+                    aria-current="page" {% endif %}>Dashboard</a></li>
+            <li><a href="{{ url_for('admin_experts') }}" {% if request.endpoint=='admin_experts' or
+                    request.endpoint=='admin_expert_detail' %}class="active" aria-current="page" {% endif
+                    %}>Ervaringsdeskundigen</a></li>
+            <li><a href="{{ url_for('admin_organizations') }}" {% if request.endpoint=='admin_organizations' or
+                    request.endpoint=='admin_organization_detail' or request.endpoint=='admin_organization_create'
+                    %}class="active" aria-current="page" {% endif %}>Organisaties</a></li>
+            <li><a href="{{ url_for('admin_studies') }}" {% if request.endpoint=='admin_studies' or
+                    request.endpoint=='admin_study_detail' %}class="active" aria-current="page" {% endif
+                    %}>Onderzoeken</a></li>
+            <li><a href="{{ url_for('admin_enrollments') }}" {% if request.endpoint=='admin_enrollments' or
+                    request.endpoint=='admin_enrollment_detail' %}class="active" aria-current="page" {% endif
+                    %}>Inschrijvingen</a></li>
+            <li><a href="{{ url_for('signout') }}">Uitloggen</a></li>
+        </ul>
+    </nav>
+
+    <main id="main-content">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages" role="alert" aria-live="polite">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Stichting Accessibility. Alle rechten voorbehouden.</p>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

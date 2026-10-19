@@ -1,0 +1,24 @@
+{% extends "layouts/base.html.jinja" %}
+{% block main %}
+
+<section class="main-container">
+    <section class="main">
+        <form action="/signin" method="post" id="login-form">
+            <br>
+            <label for="id_email" class="required">Email:</label>
+            <input type="email" name="email" autofocus="" id="id_email" required>
+            {% if error %}
+            <label for="id_error">{{ error }}</label>
+            {% endif %}
+            <label for="id_password" class="required">Password:</label>
+            <input type="password" name="password" autocomplete="current-password" id="id_password" required>
+
+            <br>
+            <div class="submit-row">
+                <input type="submit" class="submitbutton" value="Log in">
+            </div>
+        </form>
+    </section>
+</section>
+
+{% endblock %}

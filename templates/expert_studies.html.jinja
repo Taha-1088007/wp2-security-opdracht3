@@ -1,0 +1,64 @@
+{% extends "layouts/expert_base.html.jinja" %}
+{% block main %}
+<h2 class="visually-hidden">Dashboard Overzicht</h2>
+
+<section id="nieuwe-registraties" aria-labelledby="registraties-heading">
+    <h2 id="registraties-heading">Nieuwe Onderzoeken</h2>
+
+    <table>
+        <caption class="visually-hidden">Lijst met alle onderzoeken van organisaties</caption>
+        <thead>
+            <tr>
+                <th scope="col">Organisatie</th>
+                <th scope="col">Titel</th>
+                <th scope="col">Beschrijving</th>
+                <th scope="col">Status</th>
+                <th scope="col">Locatie</th>
+                <th scope="col">Type</th>
+                <th scope="col">Beloning</th>
+                <th scope="col">Start</th>
+                <th scope="col">Eind</th>
+                <th scope="col">Acties</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% if enrollment_filtered %}
+            {% for enroll in enrollment_filtered %}
+            <tr>
+                <td>{{ enroll['org_name'] }}</td>
+                <td>{{ enroll['study_title'] }}</td>
+                <td>{{ enroll['study_description']}}</td>
+                <td>{{ enroll['study_status']}}</td>
+                <td>{{ enroll['study_location'] }}</td>
+                <td>{{ enroll['study_study_type'] }}</td>
+                <td>{{ enroll['study_reward'] }}</td>
+                <td>{{ enroll['study_start_date'] }}</td>
+                <td>{{ enroll['study_end_date'] }}</td>
+                <td>
+                    <a href="{{ url_for('expert_enrollments_list_details', study_id=enroll['study_id'])}}"
+                        class="btn btn-success">Bekijk</a>
+                    <a href="{{ url_for('expert_register_enrollment', study_id=enroll['study_id'])}}"
+                        class="btn btn-success">Aanmelden</a>
+                </td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="10" style="text-align: center">
+                    Er zijn geen onderzoeken beschikbaar, volgens jou beperking.
+                </td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    {# <nav class="pagination" aria-label="Paginatie voor registraties">#}
+        {# <a href="#" aria-label="Vorige pagina">← Vorige</a>#}
+        {# <a href="#" aria-label="Pagina 1">1</a>#}
+        {# <span class="current" aria-current="page" aria-label="Huidige pagina, pagina 2">2</span>#}
+        {# <a href="#" aria-label="Pagina 3">3</a>#}
+        {# <a href="#" aria-label="Volgende pagina">Volgende →</a>#}
+        {# </nav>#}
+</section>
+{% endblock %}

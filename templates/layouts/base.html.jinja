@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="Laat je website, app of winkel testen op toegankelijkheid door ervaringsdeskundigen.Gratis aanmelding voor organisaties. Verbeter je toegankelijkheid.">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="author" content="Accessibility Nederland">
+    <link rel="canonical" href="https://www.accessibilitynederland.nl">
+    <link rel="icon" type="image/png" href="/images/favicon/favicon.ico">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=close,menu">
+    <script type="application/ld+json">
+        {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Accessibility Nederland",
+        "url": "https://accessibility-nederland.nl",
+        "description": "Laat je website, app of winkel testen op toegankelijkheid door ervaringsdeskundigen. Gratis aanmelding voor organisaties.",
+        "serviceProvided": {
+        "@type": "Service",
+        "name": "Toegankelijkheidstesten",
+        "description": "Testen van websites, apps en winkels op toegankelijkheid met hulp van ervaringsdeskundigen met diverse beperkingen.",
+        "provider": {
+        "@type": "Organization",
+        "name": "Accessibility Nederland"
+        }
+        },
+        "offers": {
+        "@type": "Offer",
+        "name": "Gratis aanmelding",
+        "price": "0",
+        "priceCurrency": "EUR"
+        }
+        }
+        </script>
+    <title>Accessibility Hub Nederland</title>
+</head>
+
+<body>
+    <header>
+        <nav class="top-nav-container">
+            <div class="hamburger-pos">
+                <div class="top-nav-pos">
+                    <!--      Open menu -->
+                    <div class="logo">
+                        <i class="logo-name"><img alt="Accessibility logo"
+                                src="/static/images/nav-logo-accessibility.png" width="110" height="20"></i>
+                        <a class="hamburger" href="#menu" role="button" aria-label="Open menu">
+                            <span class="material-symbols-outlined">menu</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Close Menu -->
+            <div class="menu" id="menu" aria-label="Menu" aria-hidden="true">
+                <ul class="open">
+                    {% if user %}
+                    <li>
+                        <h2> Welcome {{ user[1] }}</h2>
+                    </li>
+                    <li><a href="/signout">Uitloggen</a></li>
+                    {% else %}
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Registreer</a></li>
+                    {% endif %}
+
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/info">Info</a></li>
+                </ul>
+                <a class="close" href="#" role="button" aria-label="Sluit menu"><span
+                        class="material-symbols-outlined">close</span></a>
+            </div>
+        </nav>
+
+        <section class="main-media-container">
+            <img src="/static/images/stad-in-nacht-hoge-gebouwen-oranje-gloed.jpg"
+                alt="Welkom-op-de-website-van-accesibility." width="5492" height="3662">
+            <section class="title-section">
+                <div class="title-text-container">
+                    <h1>Toegankelijke websites beginnen bij echte ervaringen</h1>
+                    <p class="sub-text">
+                        Dit is een eenvoudige start voor de casus “Accessibility Hub”. De pagina hieronder
+                        leest data uit jouw SQLite database.
+                    </p>
+                </div>
+            </section>
+        </section>
+    </header>
+    <main>
+
+        {% block main %}
+        {% endblock %}
+
+    </main>
+
+    <footer>
+        <nav class="nav-footer">
+            <img alt="Footer-logo-accessibility" src="/static/images/footer-nav-logo-accessibility.png">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/info">Info</a></li>
+                <li>© 2026 – Quatro </li>
+            </ul>
+        </nav>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,27 @@
+{% extends "layouts/organization_base.html.jinja" %}
+{% block main %}
+
+<nav aria-label="Terug navigatie">
+    <a href="/organization/dashboard">Terug naar overzicht onderzoek</a>
+</nav>
+<section tabindex="0" aria-labelledby="onderzoek-titel">
+    <h1 id="onderzoek-titel">{{ study['title']}}</h1>
+    <dl>
+        <dt><strong>Status</strong></dt>
+        <dd>{{ study['status'] }}</dd>
+
+        <dt><strong>Periode</strong></dt>
+        <dd>
+            <time datetime="{{ study['start_date']}}">{{ study['start_date']}}</time>
+            -
+            <time datetime="{{ study['end_date']}}">{{ study['end_date'] }}</time>
+        </dd>
+
+        <dt><strong>Beloning</strong></dt>
+        <dd>{{ study['reward'] if study['reward'] else "Geen beloning"}}</dd>
+    </dl>
+    <h3>Beschrijving</h3>
+    <p>{{ study['description'] }}</p>
+</section>
+
+{% endblock %}

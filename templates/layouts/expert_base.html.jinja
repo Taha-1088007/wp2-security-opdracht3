@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ervaringsdeskundige Dashboard - Accessibility Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_dashboard.css') }}">
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Spring naar hoofdinhoud</a>
+
+    <header>
+        <h1>Accessibility Hub - Ervaringsdeskundige Portaal</h1>
+        <p>Welkom, {{ user[1] }}</p>
+    </header>
+
+    <nav aria-label="Hoofdnavigatie">
+
+        <ul>
+            <li><a href="/expert/dashboard" class="active" aria-current="page">Dashboard</a></li>
+            <li><a href="/expert/studies">Onderzoeken</a></li>
+            {# <li><a href="/expert/enrollments">Inschrijvingen</a></li>#}
+            <li><a href="/expert/profile/{{ g.current_user.id}}">Profiel</a></li>
+            <li><a href="/signout">Uitloggen</a></li>
+        </ul>
+    </nav>
+    <main>
+        {% block main %}
+        {% endblock %}
+    </main>
+</body>
+
+</html>

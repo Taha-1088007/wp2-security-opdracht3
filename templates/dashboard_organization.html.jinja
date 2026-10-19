@@ -1,0 +1,66 @@
+{% extends "layouts/organization_base.html.jinja" %}
+{% block main %}
+<main id="main-content">
+    <section>
+        <h2>Mijn Onderzoeken</h2>
+        <a href="/organization/study/new" class="btn btn-success">Nieuw</a>
+        <a href="{{ url_for('organization_calendar_ics') }}" class="btn btn-primary">Download agenda (ICS)</a>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th scope="col">Titel</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Beloning</th>
+                    <th scope="col">Acties</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                {#Takes the data from studies in database, if there is one#}
+                {%for study in studies%}
+                <tr>
+                    <td>{{ study[2] }}</td> {#title#}
+                    <td>{{ study[3] }}</td> {# status #}
+                    <td>
+                        <time datetime="{{ study[6] }}"> {{ study[6] }}</time>
+                        -
+                        <time datetime="{{ study[7] }}"> {{study[7] }}</time>
+                    </td> {# start-end time #}
+                    <td>{{ study[11] if study[11] else "-"}}</td> {# reward #}
+                    <td>
+                        <a href="/study/details/{{ study[0] }}" class="btn btn-primary">Details</a>
+                        <a href="/organization/enrollments/{{ study[0] }}" class="btn btn-secondary">Inschrijving</a>
+                        <a href="/organization/study/edit/{{ study[0] }}" class="btn btn-secondary">Bewerken</a>
+                    </td>
+                </tr>
+                {%else%}
+                <tr>
+                    <td colspan="5">Geen onderzoek beschikbaar.</td>
+
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
+        <nav class="pagination" aria-label="Paginatie onderzoeken">
+            {% if page>1 %}
+            <a href="{{ url_for('dashboard_organizations', page=page-1) }}" aria-label="Vorige pagina">‹ Vorige</a>
+            {% endif %}
+
+            {% for p in range(1, total_pages + 1) %}
+            {% if p == page %}
+            <span aria-current="page" class="current">{{ p }}</span>
+            {% elif p ==1 or p == total_pages or (p>= page - 2 and p <= page + 2) %} <a
+                href="{{ url_for('dashboard_organizations', page=p) }}">{{ p }}</a>
+                {% elif p == page - 3 or p == page +3 %}
+                <span>...</span>
+                {% endif %}
+                {% endfor %}
+
+                {% if page < total_pages %} <a href="{{ url_for('dashboard_organizations', page=page+1) }}"
+                    aria-label="Volgende pagina"> Volgende ›</a>
+                    {% endif%}
+        </nav>
+    </section>
+</main>
+{% endblock %}

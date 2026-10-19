@@ -1,0 +1,55 @@
+{% extends "layouts/expert_base.html.jinja" %}
+{% block main %}
+<nav aria-label="Terug navigatie">
+    <a href="/expert/enrollments">Terug naar overzicht onderzoek</a>
+</nav>
+<section aria-labelledby="onderzoek-titel">
+
+    <h2 id="onderzoek-titel">Details Opdracht</h2>
+
+    <dl>
+        <dt><strong>Study_id</strong></dt>
+        <dd>{{ study.study_id}}</dd>
+
+        <dt><strong>Organisation ID</strong></dt>
+        <dd>{{ study.org_id}}</dd>
+
+        <dt><strong>Info</strong></dt>
+        <dd>{{ study.org_description}}</dd>
+
+        <dt><strong>Website</strong></dt>
+        <dd>{{ study.org_website}}</dd>
+    </dl>
+
+    <h2>Details opdracht</h2>
+    <dl>
+        <dt><strong>Status</strong></dt>
+        <dd>{{ study.study_status}}</dd>
+
+        <dt><strong>Titel</strong></dt>
+        <dd>{{ study.study_title }}</dd>
+
+        <dt><strong>Beschrijving</strong></dt>
+        <dd>{{ study.study_description}}</dd>
+
+        <dt><strong>Type onderzoek</strong></dt>
+        <dd>{{ study.study_type}}</dd>
+
+        <dt><strong>Locatie</strong></dt>
+        <dd>{{ study.study_location}}</dd>
+
+        <dt><strong>Vergoeding</strong></dt>
+        <dd>{{ study.study_reward}}</dd>
+
+        <dt><strong>Beschikbaarheid</strong></dt>
+        <dd>{{ study.study_available}}</dd>
+
+        <dt><strong>Start</strong></dt>
+        <dd>{{ study.study_start_date}}</dd>
+
+        <dt><strong>Stopt</strong></dt>
+        <dd>{{ study.study_end_date}}</dd>
+    </dl>
+
+</section>
+{% endblock %}

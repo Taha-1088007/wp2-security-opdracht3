@@ -1,0 +1,30 @@
+{% extends "layouts/organization_base.html.jinja" %}
+{% block main %}
+<nav>
+    <a href="/organization/dashboard">Terug naar dashboard</a>
+</nav>
+<section>
+    <h1>Goedgekeurde inschrijvingen</h1>
+    <table>
+        <caption>Overzicht van goedgekeurde inschrijvingen voor dit onderzoek</caption>
+        <thead>
+            <tr>
+                <th scope="col">Naam</th>
+                <th scope="col">Datum van inschrijving</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if enrollments %}
+            {% for enrollment in enrollments %}
+            <tr>
+                <td> {{ enrollment[0] }} {{ enrollment[1] }}</td>
+                <td> {{ enrollment[2] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Er zijn geen goedgekeurde inschrijvingen.</p>
+    {% endif %}
+</section>
+{% endblock %}

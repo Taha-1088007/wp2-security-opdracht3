@@ -1,0 +1,146 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Ervaringsdeskundige Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_detail.css') }}">
+{% endblock %}
+
+{% block content %}
+<nav aria-label="Breadcrumb navigatie" class="breadcrumb">
+    <ol>
+        <li><a href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+        <li><a href="{{ url_for('admin_experts') }}">Ervaringsdeskundigen</a></li>
+        <li aria-current="page">{{ expert[3] }} {{ expert[4] }}</li>
+    </ol>
+</nav>
+
+<div class="detail-header">
+    <h1>Ervaringsdeskundige Details</h1>
+    {% if expert[2] == 'nieuw' %}
+    <span class="status-badge status-nieuw">Nieuw</span>
+    {% elif expert[2] == 'goedgekeurd' %}
+    <span class="status-badge status-goedgekeurd">Goedgekeurd</span>
+    {% elif expert[2] == 'afgekeurd' %}
+    <span class="status-badge status-afgekeurd">Afgekeurd</span>
+    {% else %}
+    <span class="status-badge">{{ expert[2] }}</span>
+    {% endif %}
+</div>
+
+<section class="detail-section" aria-labelledby="persoonlijke-info">
+    <h2 id="persoonlijke-info">Persoonlijke Informatie</h2>
+    <dl class="detail-grid">
+        <dt>Voornaam:</dt>
+        <dd>{{ expert[3] if expert[3] else '-' }}</dd>
+
+        <dt>Achternaam:</dt>
+        <dd>{{ expert[4] if expert[4] else '-' }}</dd>
+
+        <dt>Email:</dt>
+        <dd><a href="mailto:{{ expert[1] }}">{{ expert[1] }}</a></dd>
+
+        <dt>Telefoonnummer:</dt>
+        <dd>{% if expert[8] %}<a href="tel:{{ expert[8] }}">{{ expert[8] }}</a>{% else %}-{% endif %}</dd>
+
+        <dt>Geboortedatum:</dt>
+        <dd>{{ expert[5] if expert[5] else '-' }}</dd>
+
+        <dt>Geslacht:</dt>
+        <dd>{{ expert[6] if expert[6] else '-' }}</dd>
+
+        <dt>Postcode:</dt>
+        <dd>{{ expert[7] if expert[7] else '-' }}</dd>
+
+        <dt>Voorkeur contact:</dt>
+        <dd>{{ expert[17] if expert[17] else '-' }}</dd>
+    </dl>
+</section>
+
+<section class="detail-section" aria-labelledby="beperkingen-info">
+    <h2 id="beperkingen-info">Beperkingen en Voorkeuren</h2>
+    <dl class="detail-grid">
+        <dt>Beperkingen:</dt>
+        <dd>
+            {% if expert[20] %}
+            {{ expert[20] }}
+            {% else %}
+            <em>Geen specifieke beperkingen geregistreerd</em>
+            {% endif %}
+        </dd>
+
+        <dt>Hulpmiddelen:</dt>
+        <dd>{{ expert[9] if expert[9] else '-' }}</dd>
+
+        <dt>Type onderzoek voorkeur:</dt>
+        <dd>{{ expert[18] if expert[18] else '-' }}</dd>
+
+        <dt>Beschikbaarheid:</dt>
+        <dd>{{ expert[19] if expert[19] else '-' }}</dd>
+    </dl>
+</section>
+
+<section class="detail-section" aria-labelledby="extra-info">
+    <h2 id="extra-info">Extra Informatie</h2>
+    <dl class="detail-grid">
+        <dt>Korte intro:</dt>
+        <dd>{{ expert[10] if expert[10] else '-' }}</dd>
+
+        <dt>Bijzonderheden:</dt>
+        <dd>{{ expert[11] if expert[11] else '-' }}</dd>
+
+        <dt>Akkoord voorwaarden:</dt>
+        <dd>{% if expert[12] %}Ja{% else %}Nee{% endif %}</dd>
+    </dl>
+</section>
+
+<section class="detail-section" aria-labelledby="toezichthouder-info">
+    <h2 id="toezichthouder-info">Toezichthouder</h2>
+    {% if expert[13] %}
+    <dl class="detail-grid">
+        <dt>Naam:</dt>
+        <dd>{{ expert[14] if expert[14] else '-' }}</dd>
+
+        <dt>Email:</dt>
+        <dd>{% if expert[15] %}<a href="mailto:{{ expert[15] }}">{{ expert[15] }}</a>{% else %}-{% endif %}</dd>
+
+        <dt>Telefoon:</dt>
+        <dd>{% if expert[16] %}<a href="tel:{{ expert[16] }}">{{ expert[16] }}</a>{% else %}-{% endif %}</dd>
+    </dl>
+    {% else %}
+    <p class="info-message">Geen toezichthouder vereist</p>
+    {% endif %}
+</section>
+
+<section class="detail-section" aria-labelledby="registratie-info">
+    <h2 id="registratie-info">Registratie Details</h2>
+    <dl class="detail-grid">
+        <dt>Status:</dt>
+        <dd>
+            {% if expert[2] == 'nieuw' %}
+            <span class="status-badge status-nieuw">Nieuw</span>
+            {% elif expert[2] == 'goedgekeurd' %}
+            <span class="status-badge status-goedgekeurd">Goedgekeurd</span>
+            {% elif expert[2] == 'afgekeurd' %}
+            <span class="status-badge status-afgekeurd">Afgekeurd</span>
+            {% else %}
+            <span class="status-badge">{{ expert[2] }}</span>
+            {% endif %}
+        </dd>
+    </dl>
+</section>
+
+<div class="action-bar">
+    <a href="{{ url_for('admin_experts') }}" class="btn btn-secondary">← Terug</a>
+    {% if expert[2] == 'nieuw' %}
+    <div class="action-buttons">
+        <form method="post" action="{{ url_for('approve_expert', expert_id=expert[0]) }}" style="display: inline;">
+            <button type="submit" class="btn btn-success">Goedkeuren</button>
+        </form>
+        <form method="post" action="{{ url_for('reject_expert', expert_id=expert[0]) }}" style="display: inline;">
+            <button type="submit" class="btn btn-danger">Afkeuren</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

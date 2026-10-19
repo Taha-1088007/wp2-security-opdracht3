@@ -1,0 +1,43 @@
+{% extends "layouts/expert_base.html.jinja" %}
+{% block main %}
+<h2 class="visually-hidden">Dashboard Overzicht</h2>
+
+<section id="nieuwe-registraties" aria-labelledby="registraties-heading">
+    <h2 id="registraties-heading">Inschrijvingen</h2>
+    <table>
+        <caption class="visually-hidden">Lijst met nieuwe registraties van ervaringsdeskundigen</caption>
+        <thead>
+            <tr>
+                <th scope="col">Status</th>
+                <th scope="col">Organisatie</th>
+                <th scope="col">Titel</th>
+                <th scope="col">Beschrijving</th>
+                <th scope="col">Aangemeld</th>
+                <th scope="col">Acties</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for enroll in enrollment %}
+            <tr>
+                <td>{{ enroll.enrollment_status}}</td>
+                <td>{{ enroll.organization_name}}</td>
+                <td>{{ enroll.study_title}}</td>
+                <td>{{ enroll.study_description }}</td>
+                <td>{{ enroll.enrollment_created_at}}</td>
+                <td><a href="{{ url_for('expert_enrollment_details', enrollment_id=enroll.enrollment_id)}}"
+                        class="btn btn-success">Bekijk</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{#            <nav class="pagination" aria-label="Paginatie voor registraties">#}
+{#                <a href="#" aria-label="Vorige pagina">← Vorige</a>#}
+{#                <a href="#" aria-label="Pagina 1">1</a>#}
+{#                <span class="current" aria-current="page" aria-label="Huidige pagina, pagina 2">2</span>#}
+{#                <a href="#" aria-label="Pagina 3">3</a>#}
+{#                <a href="#" aria-label="Volgende pagina">Volgende →</a>#}
+{#            </nav>#}
+        </section>
+{% endblock %}

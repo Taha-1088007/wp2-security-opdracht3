@@ -1,0 +1,145 @@
+{% extends 'layouts/admin_base.html.jinja' %}
+
+{% block title %}Nieuwe Organisatie{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_form.css') }}">
+{% endblock %}
+
+{% block content %}
+<nav aria-label="Breadcrumb navigatie" class="breadcrumb">
+    <ol>
+        <li><a href="admin_dashboard.html">Dashboard</a></li>
+        <li><a href="admin_organizations_list.html">Organisaties</a></li>
+        <li aria-current="page">Nieuwe Organisatie</li>
+    </ol>
+</nav>
+
+<div class="form-header">
+    <h1>Nieuwe Organisatie Toevoegen</h1>
+    <p class="form-description">Vul de gegevens van de nieuwe organisatie in. Deze organisatie ontvangt
+        inloggegevens per email.</p>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }}">{{ message }}</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<form method="post" action="/admin/organizations/new" class="detail-form">
+    <section class="form-section" aria-labelledby="basis-gegevens">
+        <h2 id="basis-gegevens">Basis Gegevens</h2>
+
+        <div class="form-group">
+            <label for="naam">
+                Organisatie Naam <span class="required">*</span>
+            </label>
+            <input type="text" id="naam" name="name" value="{{ form_data.name if form_data else '' }}" required
+                maxlength="100">
+            {% if errors and errors.name %}
+            <span class="error-message">{{ errors.name }}</span>
+            {% endif %}
+            <span class="help-text">Volledige officiële naam van de organisatie</span>
+        </div>
+
+        <div class="form-group">
+            <label for="type">
+                Type Organisatie <span class="required">*</span>
+            </label>
+            <select id="type" name="org_type" required>
+                <option value="">-- Selecteer type --</option>
+                <option value="commercieel" {% if form_data and form_data.org_type=='commercieel' %}selected{% endif %}>
+                    Commercieel</option>
+                <option value="non-profit" {% if form_data and form_data.org_type=='non-profit' %}selected{% endif %}>
+                    Non-profit</option>
+            </select>
+            <span class="help-text">Geeft aan of de organisatie commercieel of non-profit is</span>
+        </div>
+
+        <div class="form-group">
+            <label for="website">
+                Website
+            </label>
+            <input type="url" id="website" name="website" value="{{ form_data.website if form_data else '' }}"
+                placeholder="https://www.voorbeeld.nl">
+            <span class="help-text">Website URL van de organisatie (optioneel)</span>
+        </div>
+
+        <div class="form-group">
+            <label for="beschrijving">
+                Beschrijving
+            </label>
+            <textarea id="beschrijving" name="description" rows="4"
+                maxlength="500">{{ form_data.description if form_data else '' }}</textarea>
+            <span class="help-text">Korte beschrijving van de organisatie (max 500 tekens)</span>
+        </div>
+    </section>
+
+    <section class="form-section" aria-labelledby="contactgegevens">
+        <h2 id="contactgegevens">Contactgegevens</h2>
+
+        <div class="form-group">
+            <label for="contactpersoon">
+                Contactpersoon <span class="required">*</span>
+            </label>
+            <input type="text" id="contactpersoon" name="contact_person"
+                value="{{ form_data.contact_person if form_data else '' }}" required maxlength="100">
+            {% if errors and errors.contact_person %}
+            <span class="error-message">{{ errors.contact_person }}</span>
+            {% endif %}
+            <span class="help-text">Naam van de contactpersoon binnen de organisatie</span>
+        </div>
+
+        <div class="form-group">
+            <label for="email">
+                Email <span class="required">*</span>
+            </label>
+            <input type="email" id="email" name="email" value="{{ form_data.email if form_data else '' }}" required>
+            {% if errors and errors.email %}
+            <span class="error-message">{{ errors.email }}</span>
+            {% endif %}
+            <span class="help-text">Email adres waar inloggegevens naartoe worden gestuurd</span>
+        </div>
+
+        <div class="form-group">
+            <label for="telefoon">
+                Telefoonnummer
+            </label>
+            <input type="tel" id="telefoon" name="phone" value="{{ form_data.phone if form_data else '' }}"
+                pattern="[0-9\-\+\s()]*" placeholder="06-12345678 of 020-1234567">
+            {% if errors and errors.phone %}
+            <span class="error-message">{{ errors.phone }}</span>
+            {% endif %}
+            <span class="help-text">Telefoonnummer van de contactpersoon (optioneel)</span>
+        </div>
+    </section>
+
+    <section class="form-section" aria-labelledby="extra-info">
+        <h2 id="extra-info">Extra Informatie</h2>
+        <div class="form-group">
+            <label for="overige-details">
+                Overige Details
+            </label>
+            <textarea id="overige-details" name="details" rows="4"></textarea>
+            <span class="help-text">Aanvullende informatie of bijzonderheden (optioneel)</span>
+            {# <input type="hidden" name="user_id" value="{{ user.id }}">#}
+        </div>
+    </section>
+
+    {# <section class="form-section">#}
+        {# <select name="organization_id" required>#}
+            {# <label for="organization_id">-- Kies organisatie: --</label>#}
+            {# <option value="" selected disabled>-- Kies gebruiker --</option>#}
+            {# {% for org in organization %}#}
+            {# <option value="{{ org.id }}">#}
+                {# {{ org.name }} {{ org.email }}</option>#}
+            {# {% endfor %}#}
+            {# </select>#}
+        {# </section>#}
+
+    <button type="submit" class="btn btn-success">✓ Organisatie Toevoegen</button>
+</form>
+{% endblock %}

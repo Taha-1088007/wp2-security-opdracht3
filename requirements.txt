@@ -1,0 +1,26 @@
+# Flask Framework
+Flask==3.0.0
+
+# Template Engine (included with Flask but explicit for clarity)
+Jinja2==3.1.2
+
+# WSGI utility library (included with Flask)
+Werkzeug==3.0.1
+
+# Click for command line interface (included with Flask)
+click==8.1.7
+
+# MarkupSafe for template safety (included with Jinja2)
+MarkupSafe==2.1.3
+
+# itsdangerous for session signing (included with Flask)
+itsdangerous==2.1.2
+
+# Blinker for signals support (optional but recommended for Flask)
+blinker==1.7.0
+
+# SQLite3 is included in Python standard library - no installation needed
+# Python 3.8+ required
+
+# Optional but recommended for development
+python-dotenv==1.0.0
